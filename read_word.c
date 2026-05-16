@@ -67,14 +67,21 @@ static char	*read_plain(char **line)
 	return (tmp);
 }
 
-static char	*read_piece(char **line, t_shell *sh)
+static char	*read_piece(char **line, t_shell *sh, int *keep_empty)
 {
 	if (**line == '\'')
+	{
+		*keep_empty = 1;
 		return (read_single_quote(line));
+	}
 	if (**line == '"')
+	{
+		*keep_empty = 1;
 		return (read_double_quote(line, sh));
+	}
 	if (**line == '$')
 		return (expand_variable(line, sh));
+	*keep_empty = 1;
 	return (read_plain(line));
 }
 
@@ -82,18 +89,24 @@ char	*read_word(char *line, t_token **head, t_shell *sh, int *flag)
 {
 	char	*result;
 	char	*tmp;
+	int		keep_empty;
 
 	result = ft_strdup("");
+	keep_empty = 0;
 	while (result && *line && !ft_is_space(*line) && !ft_is_operator(*line))
 	{
-		tmp = read_piece(&line, sh);
+		tmp = read_piece(&line, sh, &keep_empty);
 		if (!tmp)
 		{
 			free(result);
 			return (NULL);
 		}
+		if (*tmp)
+			keep_empty = 1;
 		result = ft_strjoin_free(result, tmp);
 	}
+	if (result && !*result && !keep_empty)
+		return (free(result), line);
 	if (!result || !add_token_lst(head, TOKEN_WORD, result))
 		*flag = 0;
 	return (line);

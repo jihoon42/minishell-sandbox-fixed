@@ -107,6 +107,10 @@ t_exec	*parse_exec(t_token **token);
 t_exec	*parse_all(t_token *tokens);
 
 int		collect_heredocs(t_exec *exec);
+int		open_heredoc_file(char *path, int *saved_stdin);
+int		abort_heredoc(char *path, int fd, int saved_stdin, char *line);
+void	restore_heredoc_stdin(int saved_stdin);
+void	cleanup_collected_heredocs(t_exec *exec);
 int		apply_redirections(t_redir *redir);
 int		run_redir_only(t_exec *cmd);
 int		execute_pipeline(t_exec *head, t_shell *sh);
@@ -130,6 +134,7 @@ int		builtin_unset(t_exec *cmd, t_shell *sh);
 void	run_loop(t_shell *sh);
 void	setup_signals(void);
 void	setup_signals_child(void);
+void	setup_signals_heredoc(void);
 void	setup_signals_ignore(void);
 void	disable_echoctl(t_shell *sh);
 void	restore_terminal(t_shell *sh);

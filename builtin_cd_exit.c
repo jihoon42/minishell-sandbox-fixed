@@ -84,7 +84,7 @@ int	builtin_exit(t_exec *cmd, t_shell *sh)
 	{
 		ft_putstr_fd("minishell: exit: numeric argument required\n", 2);
 		sh->should_exit = 1;
-		return (2);
+		return (255);
 	}
 	if (cmd->argv[2])
 		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 1);

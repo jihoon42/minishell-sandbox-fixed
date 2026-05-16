@@ -35,6 +35,11 @@ static void	handle_line(char *line, t_shell *sh)
 		return (set_syntax_error(sh));
 	if (collect_heredocs(exec_list) == 0)
 		sh->last_exit = execute_pipeline(exec_list, sh);
+	else if (g_signal == SIGINT)
+	{
+		sh->last_exit = 130;
+		g_signal = 0;
+	}
 	else
 		sh->last_exit = 1;
 	delete_exec_lst(&exec_list);

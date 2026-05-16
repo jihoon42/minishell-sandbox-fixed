@@ -23,6 +23,8 @@ SRCS = main.c \
        execute_wait.c \
        apply_redirections.c \
        heredoc.c \
+       heredoc_io.c \
+       heredoc_cleanup.c \
        env_unit.c \
        builtin_env_ops.c \
        builtin_env_set.c \
@@ -34,6 +36,7 @@ SRCS = main.c \
        char_utils.c \
        unit.c \
        signals.c \
+       signals_heredoc.c \
        terminal.c
 
 OBJS = $(SRCS:.c=.o)

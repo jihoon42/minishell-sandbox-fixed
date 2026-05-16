@@ -74,6 +74,12 @@ void	exec_external(t_exec *cmd, t_shell *sh)
 	path = resolve_path(cmd->argv[0], sh->env);
 	if (!path)
 	{
+		if (ft_strchr(cmd->argv[0], '/') && access(cmd->argv[0], F_OK) == 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(cmd->argv[0]);
+			exit(126);
+		}
 		ft_putstr_fd("minishell: command not found: ", 2);
 		ft_putendl_fd(cmd->argv[0], 2);
 		exit(127);
