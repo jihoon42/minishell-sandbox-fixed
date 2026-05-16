@@ -18,7 +18,7 @@ static char	*get_logical_pwd(t_shell *sh)
 	char	cwd[1024];
 
 	pwd = env_get(sh->env, "PWD");
-	if (pwd && *pwd)
+	if (is_current_pwd(pwd))
 		return (ft_strdup(pwd));
 	if (getcwd(cwd, sizeof(cwd)))
 		return (ft_strdup(cwd));

@@ -11,6 +11,22 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <sys/stat.h>
+
+int	is_current_pwd(char *pwd)
+{
+	struct stat	pwd_st;
+	struct stat	dot_st;
+
+	if (!pwd || !*pwd)
+		return (0);
+	if (stat(pwd, &pwd_st) != 0)
+		return (0);
+	if (stat(".", &dot_st) != 0)
+		return (0);
+	return (pwd_st.st_dev == dot_st.st_dev
+		&& pwd_st.st_ino == dot_st.st_ino);
+}
 
 static char	*combine_path(char *current, char *path)
 {
@@ -92,6 +108,6 @@ char	*build_logical_pwd(char *current_pwd, char *path)
 		return (NULL);
 	n = resolve_components(parts);
 	result = build_string(parts, n);
-	free(parts);
+	free_split(parts);
 	return (result);
 }

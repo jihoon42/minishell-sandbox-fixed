@@ -58,7 +58,7 @@ int	builtin_pwd(t_shell *sh)
 	char	cwd[1024];
 
 	pwd = env_get(sh->env, "PWD");
-	if (pwd && *pwd)
+	if (is_current_pwd(pwd))
 		return (ft_putendl_fd(pwd, 1), 0);
 	if (getcwd(cwd, sizeof(cwd)))
 		return (ft_putendl_fd(cwd, 1), 0);

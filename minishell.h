@@ -131,6 +131,7 @@ int		builtin_exit(t_exec *cmd, t_shell *sh);
 int		builtin_export(t_exec *cmd, t_shell *sh);
 int		builtin_unset(t_exec *cmd, t_shell *sh);
 
+int		is_current_pwd(char *pwd);
 char	*build_logical_pwd(char *current_pwd, char *path);
 
 void	run_loop(t_shell *sh);
