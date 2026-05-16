@@ -6,7 +6,7 @@
 /*   By: jkim2 <jkim2@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 20:45:00 by jkim2             #+#    #+#             */
-/*   Updated: 2026/05/16 20:45:00 by jkim2            ###   ########.fr       */
+/*   Updated: 2026/05/17 06:26:40 by jkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,15 +52,16 @@ int	builtin_echo(t_exec *cmd)
 	return (0);
 }
 
-int	builtin_pwd(void)
+int	builtin_pwd(t_shell *sh)
 {
+	char	*pwd;
 	char	cwd[1024];
 
+	pwd = env_get(sh->env, "PWD");
+	if (pwd && *pwd)
+		return (ft_putendl_fd(pwd, 1), 0);
 	if (getcwd(cwd, sizeof(cwd)))
-	{
-		ft_putendl_fd(cwd, 1);
-		return (0);
-	}
+		return (ft_putendl_fd(cwd, 1), 0);
 	ft_putstr_fd("minishell: pwd: error\n", 2);
 	return (1);
 }

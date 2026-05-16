@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoung <sjoung@student.42gyeongsan.kr>     +#+  +:+       +#+        */
+/*   By: jkim2 <jkim2@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 00:00:00 by sjoung            #+#    #+#             */
-/*   Updated: 2026/03/31 00:00:00 by sjoung           ###   ########.fr       */
+/*   Updated: 2026/05/17 06:57:17 by jkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -124,12 +124,14 @@ int		is_builtin(char *cmd);
 int		exec_builtin(t_exec *cmd, t_shell *sh);
 int		run_parent_builtin(t_exec *cmd, t_shell *sh);
 int		builtin_echo(t_exec *cmd);
-int		builtin_pwd(void);
+int		builtin_pwd(t_shell *sh);
 int		builtin_env(t_exec *cmd, t_shell *sh);
 int		builtin_cd(t_exec *cmd, t_shell *sh);
 int		builtin_exit(t_exec *cmd, t_shell *sh);
 int		builtin_export(t_exec *cmd, t_shell *sh);
 int		builtin_unset(t_exec *cmd, t_shell *sh);
+
+char	*build_logical_pwd(char *current_pwd, char *path);
 
 void	run_loop(t_shell *sh);
 void	setup_signals(void);

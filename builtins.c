@@ -6,7 +6,7 @@
 /*   By: jkim2 <jkim2@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/16 20:45:00 by jkim2             #+#    #+#             */
-/*   Updated: 2026/05/16 20:45:00 by jkim2            ###   ########.fr       */
+/*   Updated: 2026/05/17 06:45:50 by jkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	exec_builtin(t_exec *cmd, t_shell *sh)
 	if (ft_strcmp(cmd->argv[0], "cd") == 0)
 		return (builtin_cd(cmd, sh));
 	if (ft_strcmp(cmd->argv[0], "pwd") == 0)
-		return (builtin_pwd());
+		return (builtin_pwd(sh));
 	if (ft_strcmp(cmd->argv[0], "export") == 0)
 		return (builtin_export(cmd, sh));
 	if (ft_strcmp(cmd->argv[0], "unset") == 0)

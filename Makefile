@@ -30,14 +30,16 @@ SRCS = main.c \
        builtin_env_set.c \
        builtins.c \
        builtin_basic.c \
-       builtin_cd_exit.c \
+       builtin_cd.c \
+       builtin_exit.c \
        builtin_export_unset.c \
        exec_path.c \
        char_utils.c \
        unit.c \
        signals.c \
        signals_heredoc.c \
-       terminal.c
+       terminal.c \
+       path_logical.c
 
 OBJS = $(SRCS:.c=.o)
 
