@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execute_pipeline.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sjoung <sjoung@student.42gyeongsan.kr>     +#+  +:+       +#+        */
+/*   By: jkim2 <jkim2@student.42gyeongsan.kr>       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/31 00:00:00 by sjoung            #+#    #+#             */
-/*   Updated: 2026/05/21 23:30:20 by sjoung           ###   ########.fr       */
+/*   Updated: 2026/05/22 02:31:03 by jkim2            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static void	exec_status(int status, char **env)
 static void	child_process(t_exec *cmd, t_shell *sh, int prev_fd, int pipe_fd[2])
 {
 	setup_signals_child();
+	sh->is_interactive = 0;
 	if (prev_fd != -1)
 	{
 		dup2(prev_fd, STDIN_FILENO);
