@@ -10,7 +10,7 @@ LIBFT = $(LIBFT_DIR)/libft.a
 
 SRCS = main.c \
        run_loop.c \
-       laxer.c \
+       lexer.c \
        read_word.c \
        expand_variable.c \
        add_token.c \
