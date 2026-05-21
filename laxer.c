@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   laxer.c                                            :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: sjoung <sjoung@student.42gyeongsan.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static int	lexar_state(char **line, t_token **head, t_shell *sh)
+static int	lexer_state(char **line, t_token **head, t_shell *sh)
 {
 	int	flag;
 
@@ -41,7 +41,7 @@ int	lexer(char *line, t_token **head, t_shell *sh)
 		line++;
 	while (*line)
 	{
-		if (!lexar_state(&line, head, sh))
+		if (!lexer_state(&line, head, sh))
 			return (0);
 	}
 	return (1);
