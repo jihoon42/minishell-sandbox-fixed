@@ -1,4 +1,4 @@
-*This project has been created as part of the 42 curriculum by sjoung, jkim2.*
+*This project has been created as part of the 42 curriculum by sjoung, jkim2*
 
 # minishell
 
@@ -130,6 +130,24 @@ if (**line == '$')
 The most subtle part of the lexer is quote handling, so it is modeled separately as a finite state machine:
 
 ```mermaid
+stateDiagram-v2
+    [*] --> NORMAL
+
+    NORMAL --> IN_SQUOTE: '
+    NORMAL --> IN_DQUOTE: "
+    NORMAL --> NORMAL: any other char
+    NORMAL --> [*]: end of input
+
+    IN_SQUOTE --> NORMAL: closing '
+    IN_SQUOTE --> IN_SQUOTE: any char
+    IN_SQUOTE --> ERROR: end of input
+
+    IN_DQUOTE --> NORMAL: closing "
+    IN_DQUOTE --> IN_DQUOTE: any other char
+    IN_DQUOTE --> ERROR: end of input
+```
+The diagram below presents the same information as the one above, but in a more organized format. Since it may not display properly in certain environments (e.g., GitHub), we are including both versions.
+```mermaid
 ---
 config:
   layout: elk
@@ -150,7 +168,6 @@ stateDiagram-v2
     IN_DQUOTE --> IN_DQUOTE: any other char
     IN_DQUOTE --> ERROR: end of input
 ```
-
 This FSM models **only the quote dimension** of tokenization:
 
 - `$` triggers variable expansion in both `NORMAL` and `IN_DQUOTE` (as a side effect on the self-loop) but does not change state.
@@ -324,7 +341,7 @@ A single command line may traverse this graph multiple times. For example, `cat 
 | Suite | Result |
 |---|---|
 | `LucasKuhn/minishell_tester` (community) | **146 / 146 pass** |
-| `norminette` | clean (single allowed `g_signal` global) |
+| `norminette` | OK except for the subject-allowed single signal global `g_signal` |
 | Memory check — `leaks` on macOS (jkim2), cross-checked against `valgrind` on Linux | **0 leaks** on every required scenario, no discrepancy between the two tools |
 
 ### Pipeline exit-status conformance
@@ -361,8 +378,9 @@ Expected outcome — confirmed: `STATUS:130`, exactly one `> ` prompt was emitte
 ```sh
 make fclean && make                            # clean build
 norminette                                     # norm check
-(cd minishell_tester && ./tester)              # community tester
 ```
+
+The community tester (`LucasKuhn/minishell_tester`) was used during development and is not included in this repository. To reproduce the `146 / 146` result, clone it separately outside the project directory and run `./tester` from there.
 
 Representative leak checks on macOS (each must report `0 leaks for 0 total leaked bytes`):
 
