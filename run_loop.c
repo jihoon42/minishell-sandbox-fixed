@@ -18,21 +18,8 @@ static void	set_syntax_error(t_shell *sh)
 	sh->last_exit = 2;
 }
 
-static void	handle_line(char *line, t_shell *sh)
+static void	execute_or_skip(t_exec *exec_list, t_shell *sh)
 {
-	t_token	*tokens;
-	t_exec	*exec_list;
-
-	tokens = NULL;
-	exec_list = NULL;
-	if (!lexer(line, &tokens, sh))
-		return (set_syntax_error(sh));
-	if (!tokens)
-		return ;
-	exec_list = parse_all(tokens);
-	delete_token_lst(&tokens);
-	if (!exec_list)
-		return (set_syntax_error(sh));
 	if (collect_heredocs(exec_list, sh) == 0)
 		sh->last_exit = execute_pipeline(exec_list, sh);
 	else if (g_signal == SIGINT)
@@ -43,6 +30,31 @@ static void	handle_line(char *line, t_shell *sh)
 	else
 		sh->last_exit = 1;
 	cleanup_collected_heredocs(exec_list);
+}
+
+static void	handle_line(char *line, t_shell *sh)
+{
+	t_token	*tokens;
+	t_exec	*exec_list;
+
+	tokens = NULL;
+	exec_list = NULL;
+	if (!lexer(line, &tokens, sh))
+		return (set_syntax_error(sh));
+	if (sh->ambiguous_redirect)
+	{
+		sh->ambiguous_redirect = 0;
+		sh->last_exit = 1;
+		delete_token_lst(&tokens);
+		return ;
+	}
+	if (!tokens)
+		return ;
+	exec_list = parse_all(tokens);
+	delete_token_lst(&tokens);
+	if (!exec_list)
+		return (set_syntax_error(sh));
+	execute_or_skip(exec_list, sh);
 	delete_exec_lst(&exec_list);
 }
 

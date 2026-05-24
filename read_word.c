@@ -52,11 +52,18 @@ static char	*read_double_quote(char **line, t_shell *sh)
 	return (result);
 }
 
-static char	*read_plain(char **line)
+static char	*read_piece(char **line, t_shell *sh, int *keep_empty, int *had_q)
 {
 	int		i;
 	char	*tmp;
 
+	if (**line == '\'')
+		return (*keep_empty = 1, *had_q = 1, read_single_quote(line));
+	if (**line == '"')
+		return (*keep_empty = 1, *had_q = 1, read_double_quote(line, sh));
+	if (**line == '$')
+		return (expand_variable(line, sh));
+	*keep_empty = 1;
 	i = 0;
 	while ((*line)[i] && !ft_is_space((*line)[i])
 		&& !ft_is_operator((*line)[i]) && (*line)[i] != '\''
@@ -67,33 +74,35 @@ static char	*read_plain(char **line)
 	return (tmp);
 }
 
-static char	*read_piece(char **line, t_shell *sh, int *keep_empty, int *had_q)
+static char	*drop_empty(char *start, char *end, t_token *head, t_shell *sh)
 {
-	if (**line == '\'')
+	char	*orig;
+	int		t;
+
+	t = last_token_type(head);
+	if (t < TOKEN_REDIR_IN || t > TOKEN_REDIR_APPEND)
+		return (end);
+	orig = ft_substr(start, 0, end - start);
+	ft_putstr_fd("minishell: ", 2);
+	if (orig)
 	{
-		*keep_empty = 1;
-		*had_q = 1;
-		return (read_single_quote(line));
+		ft_putstr_fd(orig, 2);
+		free(orig);
 	}
-	if (**line == '"')
-	{
-		*keep_empty = 1;
-		*had_q = 1;
-		return (read_double_quote(line, sh));
-	}
-	if (**line == '$')
-		return (expand_variable(line, sh));
-	*keep_empty = 1;
-	return (read_plain(line));
+	ft_putstr_fd(": ambiguous redirect\n", 2);
+	sh->ambiguous_redirect = 1;
+	return (end);
 }
 
 char	*read_word(char *line, t_token **head, t_shell *sh, int *flag)
 {
 	char	*result;
 	char	*tmp;
+	char	*start;
 	int		keep_empty;
 	int		had_q;
 
+	start = line;
 	result = ft_strdup("");
 	keep_empty = 0;
 	had_q = 0;
@@ -107,7 +116,7 @@ char	*read_word(char *line, t_token **head, t_shell *sh, int *flag)
 		result = ft_strjoin_free(result, tmp);
 	}
 	if (result && !*result && !keep_empty)
-		return (free(result), line);
+		return (free(result), drop_empty(start, line, *head, sh));
 	if (!result || !add_token_lst(head, TOKEN_WORD, result, had_q))
 		*flag = 0;
 	return (line);

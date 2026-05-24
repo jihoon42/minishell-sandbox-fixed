@@ -26,6 +26,7 @@ int	main(int argc, char **argv, char **envp)
 	sh.last_exit = 0;
 	sh.should_exit = 0;
 	sh.is_interactive = isatty(STDIN_FILENO);
+	sh.ambiguous_redirect = 0;
 	sh.term_saved = 0;
 	g_signal = 0;
 	disable_echoctl(&sh);

@@ -12,13 +12,13 @@
 
 #include "minishell.h"
 
-static int	last_is_heredoc(t_token *head)
+int	last_token_type(t_token *head)
 {
 	if (!head)
-		return (0);
+		return (-1);
 	while (head->next)
 		head = head->next;
-	return (head->type == TOKEN_HERE_DOC);
+	return (head->type);
 }
 
 static int	lexer_state(char **line, t_token **head, t_shell *sh)
@@ -34,7 +34,7 @@ static int	lexer_state(char **line, t_token **head, t_shell *sh)
 		flag = add_redir_in(line, head);
 	else if (**line == '>')
 		flag = add_redir_out(line, head);
-	else if (last_is_heredoc(*head))
+	else if (last_token_type(*head) == TOKEN_HERE_DOC)
 		*line = read_heredoc_delimiter(*line, head, &flag);
 	else
 		*line = read_word(*line, head, sh, &flag);

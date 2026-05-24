@@ -63,6 +63,7 @@ typedef struct s_shell
 	int				last_exit;
 	int				should_exit;
 	int				is_interactive;
+	int				ambiguous_redirect;
 	struct termios	orig_term;
 	int				term_saved;
 }	t_shell;
@@ -92,6 +93,7 @@ int		add_redir_in(char **line, t_token **head);
 int		add_pipe(char **line, t_token **head);
 int		add_redir_out(char **line, t_token **head);
 int		lexer(char *line, t_token **head, t_shell *sh);
+int		last_token_type(t_token *head);
 char	*read_word(char *line, t_token **head, t_shell *sh, int *flag);
 char	*read_heredoc_delimiter(char *line, t_token **head, int *flag);
 char	*expand_heredoc_line(char *line, t_shell *sh);
