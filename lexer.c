@@ -28,6 +28,8 @@ static int	lexer_state(char **line, t_token **head, t_shell *sh)
 	flag = 1;
 	if (ft_is_space(**line))
 		(*line)++;
+	else if (**line == '&')
+		return (delete_token_lst(head), 0);
 	else if (**line == '|')
 		flag = add_pipe(line, head);
 	else if (**line == '<')

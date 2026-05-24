@@ -14,7 +14,7 @@
 
 int	ft_is_operator(char c)
 {
-	return (c == '|' || c == '<' || c == '>');
+	return (c == '|' || c == '<' || c == '>' || c == '&');
 }
 
 int	ft_is_space(char c)
