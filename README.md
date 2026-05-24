@@ -55,7 +55,7 @@ make fclean   # remove objects + binary
 make re       # full rebuild
 ```
 
-The build links against GNU Readline (`-lreadline`). The `Makefile` includes Homebrew prefix flags (`/opt/homebrew/opt/readline`) for macOS development; on Linux these refer to non-existent directories and are silently ignored, so `-lreadline` resolves against the system Readline. Clean build verified on the 42 cluster (Ubuntu) without `Makefile` edits.
++The build links against GNU Readline (`-lreadline`). On macOS development, add `-I/opt/homebrew/opt/readline/include` to `CFLAGS` and `-L/opt/homebrew/opt/readline/lib` to `LDFLAGS` as needed for your local setup.
 
 ## Resources
 

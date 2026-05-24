@@ -2,8 +2,7 @@ NAME = minishell
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
-CFLAGS += -I/opt/homebrew/opt/readline/include
-LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline
+LDFLAGS = -lreadline
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
