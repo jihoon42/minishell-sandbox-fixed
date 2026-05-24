@@ -69,13 +69,23 @@ int	builtin_export(t_exec *cmd, t_shell *sh)
 int	builtin_unset(t_exec *cmd, t_shell *sh)
 {
 	int	i;
+	int	ret;
 
 	i = 1;
+	ret = 0;
 	while (cmd->argv[i])
 	{
-		if (is_valid_identifier(cmd->argv[i]))
+		if (!is_valid_identifier(cmd->argv[i])
+			|| ft_strchr(cmd->argv[i], '='))
+		{
+			ft_putstr_fd("minishell: unset: `", 2);
+			ft_putstr_fd(cmd->argv[i], 2);
+			ft_putstr_fd("': not a valid identifier\n", 2);
+			ret = 1;
+		}
+		else
 			env_unset(&sh->env, cmd->argv[i]);
 		i++;
 	}
-	return (0);
+	return (ret);
 }
