@@ -46,6 +46,8 @@ int	builtin_cd(t_exec *cmd, t_shell *sh)
 
 	if (cmd->argv[1] && cmd->argv[2])
 		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
+	if (cmd->argv[1] && cmd->argv[1][0] == '\0')
+		return (0);
 	if (!cmd->argv[1])
 		path = env_get(sh->env, "HOME");
 	else
