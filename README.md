@@ -55,7 +55,7 @@ make fclean   # remove objects + binary
 make re       # full rebuild
 ```
 
-+The build links against GNU Readline (`-lreadline`). On macOS development, add `-I/opt/homebrew/opt/readline/include` to `CFLAGS` and `-L/opt/homebrew/opt/readline/lib` to `LDFLAGS` as needed for your local setup.
+The build links against GNU Readline (`-lreadline`). On macOS development, add `-I/opt/homebrew/opt/readline/include` to `CFLAGS` and `-L/opt/homebrew/opt/readline/lib` to `LDFLAGS` as needed for your local setup.
 
 ## Resources
 
