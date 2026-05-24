@@ -39,6 +39,28 @@ static void	cd_update_env(t_shell *sh, char *old_logical, char *path)
 	free(new_logical);
 }
 
+static char	*resolve_cd_path(t_exec *cmd, t_shell *sh)
+{
+	char	*path;
+
+	if (!cmd->argv[1])
+	{
+		path = env_get(sh->env, "HOME");
+		if (!path)
+			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
+		return (path);
+	}
+	if (cmd->argv[1][0] == '-' && cmd->argv[1][1] == '\0')
+	{
+		path = env_get(sh->env, "OLDPWD");
+		if (!path)
+			return (ft_putstr_fd("minishell: cd: OLDPWD not set\n", 2), NULL);
+		ft_putendl_fd(path, 1);
+		return (path);
+	}
+	return (cmd->argv[1]);
+}
+
 int	builtin_cd(t_exec *cmd, t_shell *sh)
 {
 	char	*path;
@@ -48,12 +70,9 @@ int	builtin_cd(t_exec *cmd, t_shell *sh)
 		return (ft_putstr_fd("minishell: cd: too many arguments\n", 2), 1);
 	if (cmd->argv[1] && cmd->argv[1][0] == '\0')
 		return (0);
-	if (!cmd->argv[1])
-		path = env_get(sh->env, "HOME");
-	else
-		path = cmd->argv[1];
+	path = resolve_cd_path(cmd, sh);
 	if (!path)
-		return (ft_putstr_fd("minishell: cd: HOME not set\n", 2), 1);
+		return (1);
 	old_logical = get_logical_pwd(sh);
 	if (chdir(path) != 0)
 	{
