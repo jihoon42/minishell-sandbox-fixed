@@ -25,7 +25,7 @@ void	delete_redir_lst(t_redir **head)
 	}
 }
 
-t_exec	*add_redir_lst(t_exec *exec, int type, char *file)
+t_exec	*add_redir_lst(t_exec *exec, int type, char *file, int had_quote)
 {
 	t_redir	*data;
 	t_redir	*cur;
@@ -35,6 +35,7 @@ t_exec	*add_redir_lst(t_exec *exec, int type, char *file)
 		return (NULL);
 	data->type = type;
 	data->file = ft_strdup(file);
+	data->had_quote = had_quote;
 	data->next = NULL;
 	if (!exec->redirs)
 		exec->redirs = data;

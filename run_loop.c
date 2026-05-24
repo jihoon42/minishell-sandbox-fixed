@@ -33,7 +33,7 @@ static void	handle_line(char *line, t_shell *sh)
 	delete_token_lst(&tokens);
 	if (!exec_list)
 		return (set_syntax_error(sh));
-	if (collect_heredocs(exec_list) == 0)
+	if (collect_heredocs(exec_list, sh) == 0)
 		sh->last_exit = execute_pipeline(exec_list, sh);
 	else if (g_signal == SIGINT)
 	{
@@ -42,6 +42,7 @@ static void	handle_line(char *line, t_shell *sh)
 	}
 	else
 		sh->last_exit = 1;
+	cleanup_collected_heredocs(exec_list);
 	delete_exec_lst(&exec_list);
 }
 

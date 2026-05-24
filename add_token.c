@@ -17,18 +17,18 @@ int	add_redir_in(char **line, t_token **head)
 	(*line)++;
 	if (**line == '<')
 	{
-		if (!add_token_lst(head, TOKEN_HERE_DOC, ft_strdup("<<")))
+		if (!add_token_lst(head, TOKEN_HERE_DOC, ft_strdup("<<"), 0))
 			return (0);
 		(*line)++;
 	}
-	else if (!add_token_lst(head, TOKEN_REDIR_IN, ft_strdup("<")))
+	else if (!add_token_lst(head, TOKEN_REDIR_IN, ft_strdup("<"), 0))
 		return (0);
 	return (1);
 }
 
 int	add_pipe(char **line, t_token **head)
 {
-	if (!add_token_lst(head, TOKEN_PIPE, ft_strdup("|")))
+	if (!add_token_lst(head, TOKEN_PIPE, ft_strdup("|"), 0))
 		return (0);
 	(*line)++;
 	return (1);
@@ -39,11 +39,11 @@ int	add_redir_out(char **line, t_token **head)
 	(*line)++;
 	if (**line == '>')
 	{
-		if (!add_token_lst(head, TOKEN_REDIR_APPEND, ft_strdup(">>")))
+		if (!add_token_lst(head, TOKEN_REDIR_APPEND, ft_strdup(">>"), 0))
 			return (0);
 		(*line)++;
 	}
-	else if (!add_token_lst(head, TOKEN_REDIR_OUT, ft_strdup(">")))
+	else if (!add_token_lst(head, TOKEN_REDIR_OUT, ft_strdup(">"), 0))
 		return (0);
 	return (1);
 }

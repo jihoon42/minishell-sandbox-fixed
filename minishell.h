@@ -37,6 +37,7 @@ typedef struct s_token
 {
 	int				type;
 	char			*s;
+	int				had_quote;
 	struct s_token	*next;
 }	t_token;
 
@@ -44,6 +45,7 @@ typedef struct s_redir
 {
 	int				type;
 	char			*file;
+	int				had_quote;
 	struct s_redir	*next;
 }	t_redir;
 
@@ -83,14 +85,16 @@ int		env_set(char ***env, char *key, char *value);
 int		env_unset(char ***env, char *key);
 int		is_valid_identifier(char *str);
 
-t_token	*init_token_data(int type, char *s);
-int		add_token_lst(t_token **head, int type, char *s);
+t_token	*init_token_data(int type, char *s, int had_quote);
+int		add_token_lst(t_token **head, int type, char *s, int had_quote);
 void	delete_token_lst(t_token **head);
 int		add_redir_in(char **line, t_token **head);
 int		add_pipe(char **line, t_token **head);
 int		add_redir_out(char **line, t_token **head);
 int		lexer(char *line, t_token **head, t_shell *sh);
 char	*read_word(char *line, t_token **head, t_shell *sh, int *flag);
+char	*read_heredoc_delimiter(char *line, t_token **head, int *flag);
+char	*expand_heredoc_line(char *line, t_shell *sh);
 char	*expand_variable(char **line, t_shell *sh);
 int		ft_is_operator(char c);
 int		ft_is_space(char c);
@@ -99,14 +103,14 @@ int		argv_cnt(char **argv);
 char	**add_argv(t_exec *exec, char *s);
 void	argv_free(char **argv);
 void	delete_redir_lst(t_redir **head);
-t_exec	*add_redir_lst(t_exec *exec, int type, char *file);
+t_exec	*add_redir_lst(t_exec *exec, int type, char *file, int had_quote);
 t_exec	*init_exec(void);
 void	delete_exec_lst(t_exec **head);
 t_exec	*parse_redir_argv(t_exec *exec, t_token **token);
 t_exec	*parse_exec(t_token **token);
 t_exec	*parse_all(t_token *tokens);
 
-int		collect_heredocs(t_exec *exec);
+int		collect_heredocs(t_exec *exec, t_shell *sh);
 int		open_heredoc_file(char *path, int *saved_stdin);
 int		abort_heredoc(char *path, int fd, int saved_stdin, char *line);
 void	restore_heredoc_stdin(int saved_stdin);

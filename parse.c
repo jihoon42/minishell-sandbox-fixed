@@ -25,7 +25,8 @@ t_exec	*parse_redir_argv(t_exec *exec, t_token **token)
 		{
 			if (!(*token)->next || (*token)->next->type != TOKEN_WORD)
 				return (NULL);
-			if (!add_redir_lst(exec, (*token)->type, (*token)->next->s))
+			if (!add_redir_lst(exec, (*token)->type, (*token)->next->s,
+					(*token)->next->had_quote))
 				return (NULL);
 			*token = (*token)->next->next;
 		}

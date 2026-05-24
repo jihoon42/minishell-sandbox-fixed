@@ -28,7 +28,24 @@ static char	*get_heredoc_path(void)
 	return (path);
 }
 
-static int	write_heredoc(char *path, char *delim)
+static void	write_heredoc_line(int fd, char *line, t_redir *redir, t_shell *sh)
+{
+	char	*expanded;
+
+	if (!redir->had_quote)
+	{
+		expanded = expand_heredoc_line(line, sh);
+		if (expanded)
+		{
+			ft_putendl_fd(expanded, fd);
+			free(expanded);
+		}
+	}
+	else
+		ft_putendl_fd(line, fd);
+}
+
+static int	write_heredoc(char *path, t_redir *redir, t_shell *sh)
 {
 	int		fd;
 	int		saved_stdin;
@@ -42,12 +59,12 @@ static int	write_heredoc(char *path, char *delim)
 		line = readline("> ");
 		if (g_signal == SIGINT)
 			return (abort_heredoc(path, fd, saved_stdin, line));
-		if (!line || ft_strcmp(line, delim) == 0)
+		if (!line || ft_strcmp(line, redir->file) == 0)
 		{
 			free(line);
 			break ;
 		}
-		ft_putendl_fd(line, fd);
+		write_heredoc_line(fd, line, redir, sh);
 		free(line);
 	}
 	close(fd);
@@ -55,21 +72,21 @@ static int	write_heredoc(char *path, char *delim)
 	return (0);
 }
 
-static int	process_heredoc(t_redir *redir)
+static int	process_heredoc(t_redir *redir, t_shell *sh)
 {
 	char	*path;
 
 	path = get_heredoc_path();
 	if (!path)
 		return (-1);
-	if (write_heredoc(path, redir->file) < 0)
+	if (write_heredoc(path, redir, sh) < 0)
 		return (free(path), -1);
 	free(redir->file);
 	redir->file = path;
 	return (0);
 }
 
-int	collect_heredocs(t_exec *exec)
+int	collect_heredocs(t_exec *exec, t_shell *sh)
 {
 	t_redir	*redir;
 	t_exec	*head;
@@ -80,11 +97,9 @@ int	collect_heredocs(t_exec *exec)
 		redir = exec->redirs;
 		while (redir)
 		{
-			if (redir->type == TOKEN_HERE_DOC && process_heredoc(redir) < 0)
-			{
-				cleanup_collected_heredocs(head);
-				return (-1);
-			}
+			if (redir->type == TOKEN_HERE_DOC
+				&& process_heredoc(redir, sh) < 0)
+				return (cleanup_collected_heredocs(head), -1);
 			redir = redir->next;
 		}
 		exec = exec->next;

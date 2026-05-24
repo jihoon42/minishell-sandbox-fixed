@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-t_token	*init_token_data(int type, char *s)
+t_token	*init_token_data(int type, char *s, int had_quote)
 {
 	t_token	*data;
 
@@ -24,16 +24,17 @@ t_token	*init_token_data(int type, char *s)
 	}
 	data->type = type;
 	data->s = s;
+	data->had_quote = had_quote;
 	data->next = NULL;
 	return (data);
 }
 
-int	add_token_lst(t_token **head, int type, char *s)
+int	add_token_lst(t_token **head, int type, char *s, int had_quote)
 {
 	t_token	*node;
 	t_token	*data;
 
-	data = init_token_data(type, s);
+	data = init_token_data(type, s, had_quote);
 	if (!data)
 		return (0);
 	if (!*head)

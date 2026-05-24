@@ -25,6 +25,7 @@ SRCS = main.c \
        heredoc.c \
        heredoc_io.c \
        heredoc_cleanup.c \
+       heredoc_expand.c \
        env_unit.c \
        builtin_env_ops.c \
        builtin_env_set.c \
