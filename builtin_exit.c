@@ -11,31 +11,33 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+#include <limits.h>
 
-static int	is_numeric(char *str)
+static int	accumulate(char *str, unsigned long *u)
 {
-	int	i;
+	int	d;
 
-	i = 0;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
-	if (!str[i])
+	*u = 0;
+	if (!*str)
 		return (0);
-	while (str[i])
+	while (*str)
 	{
-		if (!ft_isdigit(str[i]))
+		if (!ft_isdigit(*str))
 			return (0);
-		i++;
+		d = *str - '0';
+		if (*u > (ULONG_MAX - d) / 10)
+			return (0);
+		*u = *u * 10 + d;
+		str++;
 	}
 	return (1);
 }
 
-static long	to_long(char *str)
+static int	parse_long(char *str, long *out)
 {
-	long	result;
-	int		sign;
+	unsigned long	u;
+	int				sign;
 
-	result = 0;
 	sign = 1;
 	if (*str == '-' || *str == '+')
 	{
@@ -43,20 +45,30 @@ static long	to_long(char *str)
 			sign = -1;
 		str++;
 	}
-	while (*str)
-		result = result * 10 + *str++ - '0';
-	return (result * sign);
+	if (!accumulate(str, &u))
+		return (0);
+	if (sign == 1 && u > (unsigned long)LONG_MAX)
+		return (0);
+	if (sign == -1 && u > (unsigned long)LONG_MAX + 1UL)
+		return (0);
+	if (sign == 1)
+		*out = (long)u;
+	else
+		*out = -(long)u;
+	return (1);
 }
 
 int	builtin_exit(t_exec *cmd, t_shell *sh)
 {
+	long	n;
+
 	if (!cmd->argv[1])
 	{
 		if (sh->is_interactive)
 			ft_putstr_fd("exit\n", 2);
 		return (sh->should_exit = 1, sh->last_exit);
 	}
-	if (!is_numeric(cmd->argv[1]))
+	if (!parse_long(cmd->argv[1], &n))
 	{
 		if (sh->is_interactive)
 			ft_putstr_fd("exit\n", 2);
@@ -71,5 +83,5 @@ int	builtin_exit(t_exec *cmd, t_shell *sh)
 	if (sh->is_interactive)
 		ft_putstr_fd("exit\n", 2);
 	sh->should_exit = 1;
-	return ((unsigned char)to_long(cmd->argv[1]));
+	return ((unsigned char)n);
 }
