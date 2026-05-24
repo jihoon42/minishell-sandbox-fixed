@@ -50,12 +50,16 @@ static long	to_long(char *str)
 
 int	builtin_exit(t_exec *cmd, t_shell *sh)
 {
-	if (sh->is_interactive)
-		ft_putstr_fd("exit\n", 2);
 	if (!cmd->argv[1])
+	{
+		if (sh->is_interactive)
+			ft_putstr_fd("exit\n", 2);
 		return (sh->should_exit = 1, sh->last_exit);
+	}
 	if (!is_numeric(cmd->argv[1]))
 	{
+		if (sh->is_interactive)
+			ft_putstr_fd("exit\n", 2);
 		ft_putstr_fd("minishell: exit: ", 2);
 		ft_putstr_fd(cmd->argv[1], 2);
 		ft_putstr_fd(": numeric argument required\n", 2);
@@ -64,6 +68,8 @@ int	builtin_exit(t_exec *cmd, t_shell *sh)
 	}
 	if (cmd->argv[2])
 		return (ft_putstr_fd("minishell: exit: too many arguments\n", 2), 1);
+	if (sh->is_interactive)
+		ft_putstr_fd("exit\n", 2);
 	sh->should_exit = 1;
 	return ((unsigned char)to_long(cmd->argv[1]));
 }
