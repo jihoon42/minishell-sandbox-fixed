@@ -12,20 +12,9 @@
 
 #include "minishell.h"
 
-static void	exec_status(int status, char **env)
+static void	exec_status(int status)
 {
-	char	*true_argv[2];
-	char	*false_argv[2];
-
-	true_argv[0] = "/usr/bin/true";
-	true_argv[1] = NULL;
-	false_argv[0] = "/usr/bin/false";
-	false_argv[1] = NULL;
-	if (status == 0)
-		execve(true_argv[0], true_argv, env);
-	if (status == 1)
-		execve(false_argv[0], false_argv, env);
-	exit(status);
+	exit(status & 0xff);
 }
 
 static void	child_process(t_exec *cmd, t_shell *sh, int prev_fd, int pipe_fd[2])
@@ -48,7 +37,7 @@ static void	child_process(t_exec *cmd, t_shell *sh, int prev_fd, int pipe_fd[2])
 	if (!cmd->argv || !cmd->argv[0])
 		exit(0);
 	if (is_builtin(cmd->argv[0]))
-		exec_status(exec_builtin(cmd, sh), sh->env);
+		exec_status(exec_builtin(cmd, sh));
 	exec_external(cmd, sh);
 }
 
