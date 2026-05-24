@@ -7,6 +7,7 @@ LDFLAGS = -L/opt/homebrew/opt/readline/lib -lreadline
 
 LIBFT_DIR = libft
 LIBFT = $(LIBFT_DIR)/libft.a
+LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c $(LIBFT_DIR)/*.h)
 
 SRCS = main.c \
        run_loop.c \
@@ -46,7 +47,7 @@ OBJS = $(SRCS:.c=.o)
 
 all: $(NAME)
 
-$(LIBFT):
+$(LIBFT): $(LIBFT_SRCS)
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(LIBFT) $(OBJS)
