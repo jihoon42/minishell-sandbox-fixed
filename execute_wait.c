@@ -22,7 +22,9 @@ int	wait_to_status(int status)
 	{
 		sig = WTERMSIG(status);
 		if (sig == SIGINT)
-			write(STDOUT_FILENO, "\n", 1);
+			write(STDERR_FILENO, "\n", 1);
+		else if (sig == SIGQUIT)
+			write(STDERR_FILENO, "Quit (core dumped)\n", 19);
 		return (128 + sig);
 	}
 	return (1);
