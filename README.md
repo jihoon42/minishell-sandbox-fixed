@@ -332,7 +332,7 @@ A single command line may traverse this graph multiple times. For example, `cat 
 
 - **Quotes.** `'$HOME'` stays literal; `"$HOME"` expands; adjacent quoted segments concatenate into a single word (`'a''b'` → `ab`; `"$HOME"/bin` → e.g. `/Users/jihoon/bin`).
 - **Empty expansion.** `$UNDEF` in an unquoted context produces no word at all — `echo $UNDEF after` prints `after`. In a quoted context it produces an empty string.
-- **Missing redirection target after expansion.** When an unquoted expansion like `$UNDEF` produces no word (e.g. `> $UNDEF`), `read_word()` drops the empty result and emits no `TOKEN_WORD`. The parser then sees the redirection with no following word and rejects it as a syntax error (`$? = 2`). `minishell` does not word-split on expansion, so the multi-word "ambiguous redirect" case that `bash` reports does not arise here.
+- **Missing redirection target after expansion.** When an unquoted expansion like `$UNDEF` produces no word after a redirection operator (e.g. `> $UNDEF`), `read_word()` flags it as `ambiguous redirect` and sets `$? = 1` (this implementation does **not** convert this case into a parser syntax error).
 - **Heredoc interrupt.** Pressing `Ctrl-C` during heredoc input aborts the current command, unlinks the temporary file, and returns to the prompt with `$? = 130`. Verified with a PTY-based test (methodology in *Heredoc-interrupt verification* below).
 - **Exit status.** Pipeline status follows the last command; signal-terminated children produce `128 + signo`; `exit abc` exits with `2` (non-numeric argument), matching modern `bash`.
 
@@ -366,7 +366,7 @@ Because `Ctrl-C` during heredoc input is hard to trigger from a plain pipe (`rea
 3. Send `\x03` (Ctrl-C).
 4. Wait for the main prompt to return and probe `$?` via `echo STATUS:$?`.
 
-Expected outcome — confirmed: `STATUS:130`, exactly one `> ` prompt was emitted before the interrupt, and no leftover `/tmp/.minishell_new_heredoc_*` file remains.
+Expected outcome: `STATUS:130`, exactly one `> ` prompt before the interrupt, and no leftover `/tmp/.minishell_new_heredoc_*` files. (The repository currently documents this PTY procedure but does not include an automated test script for it.)
 
 ### Known warnings
 
