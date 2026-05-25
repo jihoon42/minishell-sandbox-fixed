@@ -70,7 +70,9 @@ Classic references:
 
 Claude (Anthropic) was used during development for the following tasks:
 
+- **Architectural discussion.** Comparing a tree-based AST against a flat command list given the subject scope; recognizing that heredoc collection belongs in its own phase between parsing and execution; deciding the redirection-application order inside the child process.
 - **Diagram drafting and review.** The overview flowchart, lexer FSM, parsed-command-representation diagram, pipeline sequence diagram, and signal-handling state diagram below were drafted iteratively with Claude and corrected against the actual implementation across multiple rounds.
+- **Code review.** Focused review of parent-side file descriptor hygiene in `execute_pipeline.c`, the `wait()`-loop pattern in `execute_wait.c`, the interleaving of `$`-expansion inside the lexer (`read_word.c`), and the signal-mode transitions across `signals.c` / `signals_heredoc.c`.
 - **Documentation prose.** The text surrounding each diagram in this README was edited together with Claude for accuracy against the codebase.
 
 Implementation, debugging, and final design decisions were carried out by the authors.
